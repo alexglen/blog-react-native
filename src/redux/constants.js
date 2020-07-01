@@ -1,0 +1,4 @@
+export const FETCH_ARTICLES = "FETCH_ARTICLES";
+export const ADD_ARTICLE = "ADD_ARTICLE";
+export const DELETE_ARTICLE = "DELETE_ARTICLE";
+export const TOGGLE_MARKED = "TOGGLE_MARKED";
