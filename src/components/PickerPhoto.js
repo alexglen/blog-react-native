@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Button, Image, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
+import { THEME } from "../../theme";
 
 export const PickerPhoto = ({ savePhoto }) => {
 	const [img, setImg] = useState(null);
@@ -35,7 +36,11 @@ export const PickerPhoto = ({ savePhoto }) => {
 
 	return (
 		<View style={styles.picker}>
-			<Button title="Сделать фото" onPress={takePhoto} color="green" />
+			<Button
+				title="Сделать фото"
+				onPress={takePhoto}
+				color={THEME.SECONDARY_COLOR}
+			/>
 			{img && (
 				<Image source={{ uri: img }} style={{ width: "100%", height: 200 }} />
 			)}

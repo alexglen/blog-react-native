@@ -11,6 +11,7 @@ import { TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { addArticle } from "../redux/actions";
 import { PickerPhoto } from "../components/PickerPhoto";
+import { postArticle } from "../services";
 
 export const CreateArticleScreen = ({ navigation }) => {
 	const [title, setTitle] = useState("");
@@ -19,17 +20,17 @@ export const CreateArticleScreen = ({ navigation }) => {
 
 	const dispatch = useDispatch();
 
+	const payload = {
+		img: photo,
+		text,
+		date: new Date(),
+		booked: false,
+		title,
+	};
+
 	const saveArticle = () => {
-		dispatch(
-			addArticle({
-				id: Math.random().toString(),
-				img: photo,
-				text,
-				date: new Date().toJSON(),
-				booked: false,
-				title,
-			})
-		);
+		dispatch(addArticle(payload));
+		postArticle(photo, text, new Date(), false, title);
 		setText("");
 		setTitle("");
 		savePhoto(null);
@@ -61,6 +62,7 @@ export const CreateArticleScreen = ({ navigation }) => {
 					title="Сохранить"
 					onPress={saveArticle}
 					disabled={!text.trim() || !title.trim() || !photo}
+					color={THEME.THIRD_COLOR}
 				/>
 			</TouchableWithoutFeedback>
 		</ScrollView>

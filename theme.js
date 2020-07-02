@@ -1,4 +1,6 @@
 export const THEME = {
-	MAIN_COLOR: "rgba(146, 29, 124, 1)",
-	DANGER_COLOR: "red",
+	MAIN_COLOR: "#C71585",
+	DANGER_COLOR: "#C80000",
+	SECONDARY_COLOR: "#FF1493",
+	THIRD_COLOR: "#228B22",
 };

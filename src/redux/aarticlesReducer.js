@@ -10,7 +10,8 @@ const initialState = {
 	markedArticles: [],
 };
 
-export const reducer = (state = initialState, { type, payload }) => {
+export const articlesReducer = (state = initialState, { type, payload }) => {
+	console.log(type, payload);
 	switch (type) {
 		case FETCH_ARTICLES:
 			return {

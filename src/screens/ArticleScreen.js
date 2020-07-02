@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import {
 	View,
 	Text,
@@ -7,18 +7,29 @@ import {
 	Image,
 	Alert,
 	Button,
+	Dimensions,
 } from "react-native";
 import { THEME } from "../../theme";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { HeaderIcon } from "../components/HeaderIcon";
-import { useDispatch } from "react-redux";
-import { deleteOneArticle } from "../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleMarked, removeArticle } from "../redux/actions";
+import { formatDate } from "../helpers";
 
 export const ArticleScreen = ({ navigation }) => {
 	const article = navigation.getParam("article");
 	const dispatch = useDispatch();
+	const isMarkedArticle = useSelector(
+		(state) => state.articles.markedArticles
+	).some((post) => post.id === article.id);
 
-	useEffect(() => {}, [article.booked]);
+	useEffect(() => {
+		navigation.setParams({ marked: article.booked, dispatch: dispatch });
+	}, [article.booked]);
+
+	useEffect(() => {
+		navigation.setParams({ isMarkedArticle });
+	}, [isMarkedArticle]);
 
 	const deleteArticle = () => {
 		Alert.alert(
@@ -34,7 +45,7 @@ export const ArticleScreen = ({ navigation }) => {
 					style: "destructive",
 					onPress: () => {
 						navigation.navigate("Main");
-						dispatch(deleteOneArticle(article.id));
+						dispatch(removeArticle(article.id));
 					},
 				},
 			],
@@ -42,20 +53,20 @@ export const ArticleScreen = ({ navigation }) => {
 		);
 	};
 
+	console.log(article.id);
+
 	return (
 		<ScrollView>
-			<View>
+			<View style={styles.titleWrap}>
 				<Text style={styles.title}>{article.title}</Text>
 			</View>
-			<View>
+			<View style={styles.imgWrap}>
 				<Image source={{ uri: article.img }} style={styles.img} />
 			</View>
-			<View style={styles.text}>
-				<Text>{article.text}</Text>
+			<View style={styles.textWrap}>
+				<Text style={styles.text}>{article.text}</Text>
 			</View>
-			<Text style={styles.date}>
-				{new Date(article.date).toLocaleDateString()}
-			</Text>
+			<Text style={styles.date}>{formatDate(article.date)}</Text>
 			<Button
 				title="Удалить статью"
 				color={THEME.DANGER_COLOR}
@@ -67,6 +78,8 @@ export const ArticleScreen = ({ navigation }) => {
 
 ArticleScreen.navigationOptions = ({ navigation }) => {
 	const article = navigation.getParam("article");
+	const marked = navigation.getParam("isMarkedArticle");
+	const dispatch = navigation.getParam("dispatch");
 
 	return {
 		headerTitle: article.title,
@@ -74,8 +87,10 @@ ArticleScreen.navigationOptions = ({ navigation }) => {
 			<HeaderButtons HeaderButtonComponent={HeaderIcon}>
 				<Item
 					title="take photo"
-					iconName={article.booked ? "star" : "star-border"}
-					onPress={() => console.log("make a photo")}
+					iconName={marked ? "star" : "star-border"}
+					onPress={() =>
+						dispatch && dispatch(toggleMarked(article.id, !marked))
+					}
 				/>
 			</HeaderButtons>
 		),
@@ -83,20 +98,30 @@ ArticleScreen.navigationOptions = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+	titleWrap: {
+		width: Dimensions.get("window").width * 0.96,
+	},
 	title: {
 		fontSize: 22,
 		textAlign: "center",
 		marginTop: 5,
 		marginBottom: 5,
 	},
+	imgWrap: {
+		marginTop: 5,
+	},
 	img: {
 		width: "100%",
 		height: 200,
 	},
-	text: {
+	textWrap: {
 		marginTop: 5,
 		marginBottom: 5,
 		padding: 5,
+	},
+	text: {
+		fontSize: 15,
+		lineHeight: 20,
 	},
 	date: {
 		marginLeft: 10,

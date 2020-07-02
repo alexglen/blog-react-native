@@ -4,6 +4,9 @@ import { HeaderIcon } from "../components/HeaderIcon";
 import { ListArticle } from "../components/ListArticles";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchArticles } from "../redux/actions";
+import { MainArticle } from "../components/MainArticle";
+import { ScrollView, ActivityIndicator } from "react-native";
+import { AppError } from "../components/AppError";
 
 export const MainScreen = ({ navigation }) => {
 	const goToArticle = (article) => {
@@ -13,14 +16,33 @@ export const MainScreen = ({ navigation }) => {
 	};
 
 	const dispatch = useDispatch();
-	const articles = useSelector((state) => state.articles);
-	console.log(articles);
+	const { articles } = useSelector((state) => state.articles);
 
 	useEffect(() => {
 		dispatch(fetchArticles());
 	}, [dispatch]);
 
-	return <ListArticle data={articles} goToArticle={goToArticle} />;
+	const { loader, error } = useSelector((state) => state.loader);
+
+	if (loader) {
+		return <ActivityIndicator />;
+	}
+	if (error) {
+		return <AppError />;
+	}
+
+	return (
+		<ScrollView>
+			<MainArticle
+				article={articles?.length && articles[0]}
+				goToArticle={goToArticle}
+			/>
+			<ListArticle
+				data={articles.slice(1).reverse()}
+				goToArticle={goToArticle}
+			/>
+		</ScrollView>
+	);
 };
 
 MainScreen.navigationOptions = ({ navigation }) => ({

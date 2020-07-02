@@ -3,16 +3,47 @@ import {
 	TOGGLE_MARKED,
 	DELETE_ARTICLE,
 	ADD_ARTICLE,
+	SHOW_LOADER,
+	HIDE_LOADER,
+	SHOW_ERROR,
+	HIDE_ERROR,
 } from "./constants";
-import { data } from "../data";
 
-export const fetchArticles = () => ({ type: FETCH_ARTICLES, payload: data });
+import { deleteOneArticle, addToFave } from "../services";
 
-export const toggleMarked = (id) => ({ type: TOGGLE_MARKED, payload: id });
+export const toggleMarked = (id, marked) => {
+	addToFave(id, marked);
 
-export const deleteOneArticle = (id) => ({ type: DELETE_ARTICLE, payload: id });
+	return { type: TOGGLE_MARKED, payload: id };
+};
+
+export const removeArticle = (id) => {
+	deleteOneArticle(id);
+	return { type: DELETE_ARTICLE, payload: id };
+};
 
 export const addArticle = (payload) => ({
 	type: ADD_ARTICLE,
 	payload,
 });
+
+export const fetchArticles = () => {
+	return async (dispatch) => {
+		dispatch({ type: SHOW_LOADER });
+		dispatch({ type: HIDE_ERROR });
+		try {
+			const res = await fetch(
+				"https://blog-react-native-e68a9.firebaseio.com/articles.json"
+			);
+			const body = await res.json();
+			dispatch({
+				type: FETCH_ARTICLES,
+				payload: Object.keys(body).map((key) => ({ id: key, ...body[key] })),
+			});
+		} catch (error) {
+			dispatch({ type: SHOW_ERROR, payload: error });
+		} finally {
+			dispatch({ type: HIDE_LOADER });
+		}
+	};
+};
