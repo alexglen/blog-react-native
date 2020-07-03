@@ -7,6 +7,7 @@ import { fetchArticles } from "../redux/actions";
 import { MainArticle } from "../components/MainArticle";
 import { ScrollView, ActivityIndicator } from "react-native";
 import { AppError } from "../components/AppError";
+import { THEME } from "../../theme";
 
 export const MainScreen = ({ navigation }) => {
 	const goToArticle = (article) => {
@@ -25,7 +26,7 @@ export const MainScreen = ({ navigation }) => {
 	const { loader, error } = useSelector((state) => state.loader);
 
 	if (loader) {
-		return <ActivityIndicator />;
+		return <ActivityIndicator color={THEME.MAIN_COLOR} />;
 	}
 	if (error) {
 		return <AppError />;
