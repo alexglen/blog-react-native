@@ -53,11 +53,9 @@ export const ArticleScreen = ({ navigation }) => {
 		);
 	};
 
-	console.log(article.id);
-
 	return (
 		<ScrollView>
-			<View style={styles.titleWrap}>
+			<View>
 				<Text style={styles.title}>{article.title}</Text>
 			</View>
 			<View style={styles.imgWrap}>
@@ -98,9 +96,6 @@ ArticleScreen.navigationOptions = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	titleWrap: {
-		width: Dimensions.get("window").width * 0.96,
-	},
 	title: {
 		fontSize: 22,
 		textAlign: "center",

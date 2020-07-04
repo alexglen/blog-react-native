@@ -31,17 +31,22 @@ export const fetchArticles = () => {
 	return async (dispatch) => {
 		dispatch({ type: SHOW_LOADER });
 		dispatch({ type: HIDE_ERROR });
+
 		try {
 			const res = await fetch(
 				"https://blog-react-native-e68a9.firebaseio.com/articles.json"
 			);
+
 			const body = await res.json();
+			console.log(body, "BODY");
 			dispatch({
 				type: FETCH_ARTICLES,
-				payload: Object.keys(body).map((key) => ({ id: key, ...body[key] })),
+				payload: body
+					? Object.keys(body).map((key) => ({ id: key, ...body[key] }))
+					: [],
 			});
-		} catch (error) {
-			dispatch({ type: SHOW_ERROR, payload: error });
+		} catch (err) {
+			dispatch({ type: SHOW_ERROR });
 		} finally {
 			dispatch({ type: HIDE_LOADER });
 		}

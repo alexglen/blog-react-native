@@ -37,7 +37,6 @@ export const Article = ({ article, goToArticle }) => {
 const styles = StyleSheet.create({
 	wrap: {
 		marginTop: 10,
-		width: Dimensions.get("window").width * 0.96,
 		borderRadius: 3,
 		elevation: 8,
 		shadowColor: "#000",
@@ -48,7 +47,8 @@ const styles = StyleSheet.create({
 			height: 3,
 		},
 		backgroundColor: "#fff",
-		padding: 2,
+		padding: 4,
+		width: Dimensions.get("screen").width * 0.94,
 	},
 	content: {
 		flexDirection: "row",
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
 		width: "45%",
 	},
 	wrapText: {
-		width: "55%",
 		marginLeft: 8,
 		paddingRight: 5,
 	},

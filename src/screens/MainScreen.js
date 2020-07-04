@@ -1,11 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { HeaderIcon } from "../components/HeaderIcon";
 import { ListArticle } from "../components/ListArticles";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchArticles } from "../redux/actions";
 import { MainArticle } from "../components/MainArticle";
-import { ScrollView, ActivityIndicator } from "react-native";
+import {
+	ScrollView,
+	ActivityIndicator,
+	View,
+	Text,
+	Button,
+	StyleSheet,
+} from "react-native";
 import { AppError } from "../components/AppError";
 import { THEME } from "../../theme";
 
@@ -34,14 +41,28 @@ export const MainScreen = ({ navigation }) => {
 
 	return (
 		<ScrollView>
-			<MainArticle
-				article={articles?.length && articles[0]}
-				goToArticle={goToArticle}
-			/>
-			<ListArticle
-				data={articles.slice(1).reverse()}
-				goToArticle={goToArticle}
-			/>
+			{articles?.length ? (
+				<Fragment>
+					<MainArticle article={articles[0]} goToArticle={goToArticle} />
+					<ListArticle
+						data={articles.slice(1).reverse()}
+						goToArticle={goToArticle}
+					/>
+				</Fragment>
+			) : (
+				<View style={styles.textWrap}>
+					<View>
+						<Text style={styles.text}>Вы не добавили ещё ни одной статьи</Text>
+					</View>
+					<View style={styles.button}>
+						<Button
+							title="Новая статья"
+							onPress={() => navigation.navigate("Create")}
+							color={THEME.THIRD_COLOR}
+						/>
+					</View>
+				</View>
+			)}
 		</ScrollView>
 	);
 };
@@ -66,4 +87,22 @@ MainScreen.navigationOptions = ({ navigation }) => ({
 			/>
 		</HeaderButtons>
 	),
+});
+
+const styles = StyleSheet.create({
+	textWrap: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginRight: 10,
+		marginLeft: 10,
+		marginTop: 100,
+	},
+	text: {
+		fontSize: 18,
+		textAlign: "center",
+	},
+	button: {
+		marginTop: 10,
+	},
 });
