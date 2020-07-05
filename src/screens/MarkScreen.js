@@ -13,8 +13,6 @@ export const MarkScreen = ({ navigation }) => {
 
 	const { markedArticles } = useSelector((state) => state.articles);
 
-	console.log(markedArticles);
-
 	return <ListArticle data={markedArticles} goToArticle={goToArticle} />;
 };
 

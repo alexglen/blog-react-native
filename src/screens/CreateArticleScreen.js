@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Button, Keyboard } from "react-native";
+import {
+	View,
+	StyleSheet,
+	Button,
+	Keyboard,
+	ScrollView,
+	TouchableWithoutFeedback,
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { HeaderIcon } from "../components/HeaderIcon";
 import { THEME } from "../../theme";
-import {
-	ScrollView,
-	TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { addArticle } from "../redux/actions";
 import { PickerPhoto } from "../components/PickerPhoto";
-import { postArticle } from "../services";
 
 export const CreateArticleScreen = ({ navigation }) => {
 	const [title, setTitle] = useState("");
@@ -26,11 +28,11 @@ export const CreateArticleScreen = ({ navigation }) => {
 		date: new Date(),
 		booked: false,
 		title,
+		id: Math.random().toString(),
 	};
 
 	const saveArticle = () => {
 		dispatch(addArticle(payload));
-		postArticle(photo, text, new Date(), false, title);
 		setText("");
 		setTitle("");
 		savePhoto(null);
@@ -38,8 +40,8 @@ export const CreateArticleScreen = ({ navigation }) => {
 	};
 
 	return (
-		<ScrollView>
-			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+			<ScrollView>
 				<View>
 					<TextInput
 						placeholder="Введите название статьи"
@@ -64,8 +66,8 @@ export const CreateArticleScreen = ({ navigation }) => {
 					disabled={!text.trim() || !title.trim() || !photo}
 					color={THEME.THIRD_COLOR}
 				/>
-			</TouchableWithoutFeedback>
-		</ScrollView>
+			</ScrollView>
+		</TouchableWithoutFeedback>
 	);
 };
 

@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { AppError } from "../components/AppError";
 import { THEME } from "../../theme";
+import AsyncStorage from "@react-native-community/async-storage";
 
 export const MainScreen = ({ navigation }) => {
 	const goToArticle = (article) => {
@@ -30,13 +31,19 @@ export const MainScreen = ({ navigation }) => {
 		dispatch(fetchArticles());
 	}, [dispatch]);
 
-	const { loader, error } = useSelector((state) => state.loader);
+	const changeState = async () => {
+		const jsonValue = await JSON.stringify(articles ?? []);
+		return await AsyncStorage.setItem("articles", jsonValue);
+	};
+
+	useEffect(() => {
+		changeState();
+	}, [articles]);
+
+	const { loader } = useSelector((state) => state.loader);
 
 	if (loader) {
 		return <ActivityIndicator color={THEME.MAIN_COLOR} />;
-	}
-	if (error) {
-		return <AppError />;
 	}
 
 	return (
@@ -44,10 +51,7 @@ export const MainScreen = ({ navigation }) => {
 			{articles?.length ? (
 				<Fragment>
 					<MainArticle article={articles[0]} goToArticle={goToArticle} />
-					<ListArticle
-						data={articles.slice(1).reverse()}
-						goToArticle={goToArticle}
-					/>
+					<ListArticle data={articles.slice(1)} goToArticle={goToArticle} />
 				</Fragment>
 			) : (
 				<View style={styles.textWrap}>

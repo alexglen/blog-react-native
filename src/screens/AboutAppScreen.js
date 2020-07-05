@@ -6,7 +6,7 @@ import { HeaderIcon } from "../components/HeaderIcon";
 export const AboutAppScreen = () => {
 	return (
 		<View style={styles.block}>
-			<Text>Это очень крутое приложение!</Text>
+			<Text>Приложение - блог. Версия 1.0.0</Text>
 		</View>
 	);
 };

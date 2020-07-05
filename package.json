@@ -8,7 +8,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@databases/expo": "^4.0.0",
     "@expo/vector-icons": "^10.2.0",
+    "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.5.1",

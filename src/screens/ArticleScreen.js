@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,7 +7,6 @@ import {
 	Image,
 	Alert,
 	Button,
-	Dimensions,
 } from "react-native";
 import { THEME } from "../../theme";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -18,6 +17,7 @@ import { formatDate } from "../helpers";
 
 export const ArticleScreen = ({ navigation }) => {
 	const article = navigation.getParam("article");
+
 	const dispatch = useDispatch();
 	const isMarkedArticle = useSelector(
 		(state) => state.articles.markedArticles

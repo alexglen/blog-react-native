@@ -5,22 +5,13 @@ import {
 	ADD_ARTICLE,
 	SHOW_LOADER,
 	HIDE_LOADER,
-	SHOW_ERROR,
-	HIDE_ERROR,
 } from "./constants";
 
-import { deleteOneArticle, addToFave } from "../services";
+import AsyncStorage from "@react-native-community/async-storage";
 
-export const toggleMarked = (id, marked) => {
-	addToFave(id, marked);
+export const toggleMarked = (id) => ({ type: TOGGLE_MARKED, payload: id });
 
-	return { type: TOGGLE_MARKED, payload: id };
-};
-
-export const removeArticle = (id) => {
-	deleteOneArticle(id);
-	return { type: DELETE_ARTICLE, payload: id };
-};
+export const removeArticle = (id) => ({ type: DELETE_ARTICLE, payload: id });
 
 export const addArticle = (payload) => ({
 	type: ADD_ARTICLE,
@@ -30,24 +21,14 @@ export const addArticle = (payload) => ({
 export const fetchArticles = () => {
 	return async (dispatch) => {
 		dispatch({ type: SHOW_LOADER });
-		dispatch({ type: HIDE_ERROR });
 
-		try {
-			const res = await fetch(
-				"https://blog-react-native-e68a9.firebaseio.com/articles.json"
-			);
+		const jsonValue = await AsyncStorage.getItem("articles");
 
-			const body = await res.json();
-			console.log(body, "BODY");
-			dispatch({
+		if (jsonValue != null) {
+			await dispatch({
 				type: FETCH_ARTICLES,
-				payload: body
-					? Object.keys(body).map((key) => ({ id: key, ...body[key] }))
-					: [],
+				payload: JSON.parse(jsonValue, null, 2),
 			});
-		} catch (err) {
-			dispatch({ type: SHOW_ERROR });
-		} finally {
 			dispatch({ type: HIDE_LOADER });
 		}
 	};
